@@ -1,6 +1,6 @@
 {
-  "name": "example-dir",
-  "displayName": "Example dir",
+  "name": "search-with-language",
+  "displayName": "Search with Language",
   "version": "0.0.1",
   "description": "search with language",
   "author": "memswap",
@@ -10,6 +10,7 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@plasmohq/storage": "^1.10.0",
     "plasmo": "0.86.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"
@@ -25,7 +26,11 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "https://*/*",
+      "*://*.google.com/*"
+    ],
+    "permissions": [
+      "declarativeNetRequest"
     ]
   }
 }
