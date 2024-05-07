@@ -15,6 +15,24 @@ instance.watch({
         if (newLang) {
             updateRules(newLang);
         }
+        if (c.newValue !== c.oldValue) {
+            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                console.log("tabs: ", tabs);
+                for (let tab of tabs) {
+                    if (tab.url) {
+                        let res = getKV(tab.url, newLang);
+                        if (res) {
+                            let [key, value] = res;
+                            let parsed = new URL(tab.url);
+                            parsed.searchParams.set(key, value);
+                            let newUrl = parsed.toString();
+                            console.log("reloading", newUrl);
+                            chrome.tabs.update(tab.id, { url: newUrl });
+                        }
+                    }
+                }
+            })
+        }
     },
     "config": (c) => {
         console.log("config", c)
@@ -23,6 +41,19 @@ instance.watch({
         console.log("make", c)
     }
 })
+
+function getKV(url: string, lang: string): undefined | [string, string] {
+    for (let config of defaultConfigs) {
+        let re = new RegExp(config.domain);
+        if (url.match(re)) {
+            let key = config.key;
+            let mapping = new Map(Object.entries(config.mapping));
+            let value = mapping.get(lang) || config.defaultValue;
+            return [key, value]
+        }
+    }
+    return;
+}
 
 function buildRule(id: number, selectedLang: string, key: string, mapping: Map<string, string>, defaultValue: string, domain: string): chrome.declarativeNetRequest.Rule {
 
@@ -52,18 +83,9 @@ function buildRule(id: number, selectedLang: string, key: string, mapping: Map<s
 }
 
 // shall be called when the language is changed
-async function updateRules(selectedLang: string) {
+function updateRules(selectedLang: string) {
 
     let curConfig = defaultConfigs;
-    let configStr = await instance.get('config');
-    if (configStr !== undefined) {
-        let r= JSON.parse(configStr);
-        console.log("parsed: ",r);
-        curConfig = r;
-    } else {
-        await instance.set('config', JSON.stringify(curConfig));
-    }
-
     const rules = curConfig.map(({ id, key, mapping, defaultValue, domain }) => buildRule(id, selectedLang, key, new Map(Object.entries(mapping)), defaultValue, domain));
     const ids = curConfig.map(({ id }) => id);
 
@@ -100,7 +122,7 @@ async function updateRules(selectedLang: string) {
     console.log("selectedLang: ", selectedLang);
     console.log("langugeList: ", langugeList);
 
-    await updateRules(selectedLang);
+    updateRules(selectedLang);
 })();
 
 

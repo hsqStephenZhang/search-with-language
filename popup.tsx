@@ -1,7 +1,7 @@
-import { useStorage } from "@plasmohq/storage/hook"
-
-import { instance } from "store"
 import { defaultLang, defaultLangList } from "settings"
+import { instance } from "store"
+
+import { useStorage } from "@plasmohq/storage/hook"
 
 import "./popup.css"
 
@@ -22,20 +22,19 @@ function IndexPopup() {
     defaultLang
   )
 
-  let strList: string[] = JSON.parse(list)
-  let langList = strList.map((val) => {
-    return {
-      key: val,
-      val: val
-    }
-  })
+  let parsed: { key: string; val: string }[] = JSON.parse(list)
 
   const handleClicked = async (val: string) => {
     // update the language list's order
-    let newStrList = [val]
-    for (let i = 0; i < strList.length; i++) {
-      if (strList[i] !== val) {
-        newStrList.push(strList[i])
+    let newStrList = [
+      {
+        key: val,
+        val: val
+      }
+    ]
+    for (let i = 0; i < parsed.length; i++) {
+      if (parsed[i].key !== val) {
+        newStrList.push(parsed[i])
       }
     }
     await setLang(val)
@@ -45,7 +44,7 @@ function IndexPopup() {
   return (
     <div>
       <div>
-        {langList.map((item) => (
+        {parsed.map((item) => (
           <button
             onClick={(e) => handleClicked(item.val)}
             value={item.val}

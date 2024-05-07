@@ -25,14 +25,19 @@ const defaultConfigs = [
     {
         id: 198965,
         key: 'kl',
-        mapping: langMapChrome,
+        mapping: langMapDuckduckgo,
         defaultValue: defaultLangDuckduckgo,
         domain: 'duckduckgo.com/*'
     }
 ]
 
 
-const defaultLangList = ['en', 'zh-CN', 'zh-TW', 'zh-HK'];
+const defaultLangList = ['en', 'zh-CN', 'zh-TW', 'zh-HK'].map((val)=>{
+    return {
+        key: val,
+        val: val
+    }
+});
 const defaultLang = 'en';
 
 export { defaultConfigs, defaultLangChrome, langMapChrome, defaultLangDuckduckgo, langMapDuckduckgo, defaultLangList, defaultLang};

@@ -26,8 +26,8 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*",
-      "*://*.google.com/*"
+      "*://*.google.com/*",
+      "*://*.duckduckgo.com/*"
     ],
     "permissions": [
       "declarativeNetRequest"
