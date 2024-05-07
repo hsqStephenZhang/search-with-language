@@ -11,8 +11,17 @@ const langMapDuckduckgo = {
     'zh-CN': 'cn-zh',
     'zh-TW': 'tw-tzh',
     'zh-HK': 'hk-tzh',
-    'en': 'us-en'
+    'en': 'en-US'
 }
+
+const defaultLangBing = 'en-US';
+const langMapBing = {
+    'zh-CN': 'zh-CN',
+    'zh-TW': 'zh-TW',
+    'zh-HK': 'zh-HK',
+    'en': 'en-US'
+}
+
 
 const defaultConfigs = [
     {
@@ -28,6 +37,13 @@ const defaultConfigs = [
         mapping: langMapDuckduckgo,
         defaultValue: defaultLangDuckduckgo,
         domain: 'duckduckgo.com/*'
+    },
+    {
+        id: 198966,
+        key: 'mkt',
+        mapping: langMapBing,
+        defaultValue: defaultLangBing,
+        domain: 'bing.com/search*'
     }
 ]
 
